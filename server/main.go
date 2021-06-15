@@ -1,13 +1,14 @@
 package main
 
 import (
-	"log"
 	sessioninfo "Schedule/server/SessionInfo"
 	"Schedule/server/controller"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,15 +16,13 @@ var LoginInfo sessioninfo.SessionInfo
 
 func main() {
 	engine := gin.Default()
-	engine.LoadHTMLGlob("template/*")
 	store := cookie.NewStore([]byte("select"))
 	engine.Use(sessions.Sessions("mysession", store))
-
+	engine.Use(static.Serve("/", static.LocalFile("../client/src", false)))
 	engine.GET("/login", func(c *gin.Context) {
-		c.HTML(200, "login.html", gin.H{
-			"UserId": "",
-		})
+		c.String(200, `{"message":"hello, hello, hello"}`)
 	})
+
 	engine.POST("/login", controller.NewLogin().LoginK)
 
 	engine.GET("/singup", func(c *gin.Context) {
