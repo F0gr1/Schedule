@@ -17,7 +17,7 @@
           </v-list-item-title>
 
           <v-list-item-title>
-            <router-link> {{userName}} </router-link>
+            <router-link> {{this.userName}} </router-link>
           </v-list-item-title>
 
           <v-list-item-title>
@@ -31,17 +31,25 @@
 </template>
 
 <script>
+import axios from "../plugins/axios";
 export default {
   name: 'Header',
   data(){
       return{
-        userName: '',
+        userName: null,
       };
   },
 
   methods:{
     getUserName(){
-      
+      let url = 'http://localhost:8080/login';
+      axios .get(url)
+            .then(response => {
+              this.userName = response.data['message'];
+            })
+            .catch(e => {
+              console.log(e);
+            })
     },
 
     mounted(){
